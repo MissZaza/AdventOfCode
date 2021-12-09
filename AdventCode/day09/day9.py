@@ -1,24 +1,30 @@
-f = open("Input2.txt","r")
-lines = f.readlines()
-f.close()
+
+with open("Input2.txt") as f:
+    lines = f.readlines()
 
 
-class Point:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+class Bassin:
+    def __init__(self):
+        self.points = []
+
+    @property
+    def lengh(self):
+        return len(self.points)
+
+    def define(self,initialPoint,map):
+        self.points.append(initialPoint)
+        for point in map.neighbours(initialPoint):
+            if point not in self.points and map.map[point] != 9:
+                self.define(point,map)
 
 
 class Map:
-    def __init__(self, heightlist):
-        self.rows = len(heightlist)
-        self.columns = len(heightlist[0])
-        self.map = {}
-        for r in range(self.rows):
-            for c in range(self.columns):
-                self.map[(c, r)] = int(heightlist[r][c])
+    def __init__(self, map: dict, rows: int, columns: int):
+        self.map = map
+        self.rows = rows
+        self.columns = columns
 
-    def neighbours(self, point):
+    def neighbours(self, point: tuple):
         neighbours = []
         if point[0] > 0:
             neighbours.append((point[0] - 1, point[1]))
@@ -28,27 +34,46 @@ class Map:
             neighbours.append((point[0], point[1] - 1))
         if point[1] < self.rows - 1:
             neighbours.append((point[0], point[1] + 1))
-
-        print(point, neighbours)
         return neighbours
 
-    def islow(self, point):
-        result = True
+    def islow(self, point: tuple):
         for neighbour in self.neighbours(point):
             if self.map[neighbour] <= self.map[point]:
-                result = False
+                return False
+        return True
 
-        return result
-
-clines = []
+heightlist = []
 for line in lines:
-    clines.append(line.replace("\n",""))
+    heightlist.append(line.replace("\n",""))
 
-cave = Map(clines)
+map = {}
+rows = len(heightlist)
+columns = len(heightlist[0])
+for r in range(rows):
+    for c in range(columns):
+        map[(c, r)] = int(heightlist[r][c])
 
+cave = Map(map, rows, columns)
+
+""" 
+Code to solve part 1
 riskLevel =0
+
 for point in cave.map.keys():
     if cave.islow(point):
         riskLevel = riskLevel + cave.map[point] + 1
+"""
+# Code to solve part 2
+lowPoints = []
+for point in cave.map.keys():
+    if cave.islow(point):
+        lowPoints.append(point)
 
-print(riskLevel)
+bassins = []
+for point in lowPoints:
+    bassin = Bassin()
+    bassin.define(point,cave)
+    bassins.append(bassin)
+
+bassins = sorted(bassins, key=lambda x: x.lengh, reverse=True)
+print(bassins[0].lengh, bassins[1].lengh, bassins[2].lengh, bassins[0].lengh * bassins[1].lengh * bassins[2].lengh)
