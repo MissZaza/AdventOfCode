@@ -70,7 +70,7 @@ class Connexion:
         #print(result, ebar, self.decode[5])
         return int(result)
 
-    
+
 connexions = []
 for line in lines:
     connexions.append(Connexion(line.split(" | ")))
