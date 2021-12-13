@@ -28,7 +28,7 @@ class Path:
         return next_positions
 
 
-with open("Input.txt") as f:
+with open("Input2.txt") as f:
     lines = f.read().splitlines()
 
 links = []
@@ -41,7 +41,6 @@ ended_paths = []
 
 while len(init) > 0:
     for path in init:
-        test = path.next_positions(links)
         for cave in path.next_positions(links):
             if cave == "end":
                 ended_paths.append(Path(path.caves+[cave]))
