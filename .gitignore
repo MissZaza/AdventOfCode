@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 
 .idea
+/AdventCode/day14/day14fail.py
