@@ -15,7 +15,7 @@ def fold(paper: set, line: str, position: int) -> set:
             folded_paper.add((point[0], 2 * position - point[1]))
     return folded_paper
 
-with open("Input2.txt") as f:
+with open("Input.txt") as f:
     lines = f.read().splitlines()
 
 paper = set()
